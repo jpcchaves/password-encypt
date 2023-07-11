@@ -1,11 +1,19 @@
-import { useState } from "react";
+import {
+  Box,
+  Button,
+  Container,
+  Flex,
+  Input,
+  SimpleGrid,
+  Text,
+} from "@chakra-ui/react";
 import bcrypt from "bcryptjs";
-import "./App.css";
+import { useState } from "react";
+import { ContainerWrapper } from "./components/containerWrapper";
 
 const App = () => {
   const [password, setPassword] = useState("");
   const [hashedPassword, setHashedPassword] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
   const [saltRounds, setSaltRounds] = useState<number>(8);
 
   const hashPassword = () => {
@@ -32,28 +40,38 @@ const App = () => {
     setSaltRounds((prev) => prev - 1);
   };
 
-  const toggleLoading = () => {
-    setIsLoading((prev) => !prev);
-  };
-
   return (
-    <div className="App">
-      {password && <p>{password}</p>}
-      {hashedPassword && <p>{hashedPassword}</p>}
-      <input
-        name="password"
-        onChange={(e) => setPassword(e.target.value)}
-        value={password}
-      />
-      <button type="button" onClick={() => hashPassword()}>
-        Hash Password
-      </button>
-      <div>
-        <button onClick={() => decrementSalt()}>-</button>
-        {saltRounds}
-        <button onClick={() => incrementSalt()}>+</button>
-      </div>
-    </div>
+    <SimpleGrid columns={{ base: 1, sm: 1, md: 2 }}>
+      <ContainerWrapper>
+        <Flex flexDir={"column"} justify={"center"} align={"center"}>
+          <Box>
+            <Text>{hashedPassword}</Text>
+          </Box>
+          <Input
+            name="password"
+            onChange={(e) => setPassword(e.target.value)}
+            value={password}
+          />
+          <Flex align={"center"}>
+            <Button rounded={"full"} onClick={() => decrementSalt()}>
+              -
+            </Button>
+            <Box mx="5">{saltRounds}</Box>
+            <Button rounded={"full"} onClick={() => incrementSalt()}>
+              +
+            </Button>
+          </Flex>
+          <Box>
+            <Button type="button" onClick={() => hashPassword()}>
+              Hash Password
+            </Button>
+          </Box>
+        </Flex>
+      </ContainerWrapper>
+      <ContainerWrapper>
+        <></>
+      </ContainerWrapper>
+    </SimpleGrid>
   );
 };
 
