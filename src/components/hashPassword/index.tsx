@@ -35,7 +35,7 @@ export const HashPassword = ({
   return (
     <Flex flexDir={"column"}>
       <Box>
-        <Heading>Result:</Heading>
+        <Heading size="md">Result:</Heading>
         <Container my="2" p={"6"} border={"1px"} borderRadius="base">
           <Text>{hashedPassword}</Text>
         </Container>
