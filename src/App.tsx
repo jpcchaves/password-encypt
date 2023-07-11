@@ -11,9 +11,10 @@ import {
   Text,
 } from "@chakra-ui/react";
 
-import bcrypt from "bcryptjs";
+import bcrypt, { hash } from "bcryptjs";
 import { useState } from "react";
 import { ContainerWrapper } from "./components/containerWrapper";
+import { HashPassword } from "./components/hashPassword";
 
 const App = () => {
   const [password, setPassword] = useState("");
@@ -52,48 +53,17 @@ const App = () => {
   return (
     <SimpleGrid columns={{ base: 1, sm: 1, md: 2 }}>
       <ContainerWrapper>
-        <Flex flexDir={"column"}>
-          <Box>
-            <Heading>Result:</Heading>
-            <Container my="2" p={"6"} border={"1px"} borderRadius="base">
-              <Text>{hashedPassword}</Text>
-            </Container>
-          </Box>
-          <Input
-            name="password"
-            placeholder="Enter the password you want to hash"
-            onChange={(e) => setPassword(e.target.value)}
-            value={password}
-          />
-          <Flex align={"center"} justify={"center"} my="3">
-            <IconButton
-              rounded={"full"}
-              size={"sm"}
-              aria-label="decrement salt"
-              icon={<MinusIcon boxSize={"2"} />}
-              onClick={() => decrementSalt()}
-            />
-            <Box mx="2">{saltRounds}</Box>
-            <IconButton
-              aria-label="increment salt"
-              icon={<AddIcon boxSize={"2"} />}
-              rounded={"full"}
-              size="sm"
-              onClick={() => incrementSalt()}
-            />
-          </Flex>
-          <Button
-            type="button"
-            colorScheme="blue"
-            onClick={() => hashPassword()}
-            mb="2"
-          >
-            Hash Password
-          </Button>
-          <Button type="button" onClick={() => clearPasswordInput()}>
-            Clear
-          </Button>
-        </Flex>
+        <HashPassword
+          clearPasswordInput={clearPasswordInput}
+          decrementSalt={decrementSalt}
+          hashPassword={hashPassword}
+          hashedPassword={hashedPassword}
+          incrementSalt={incrementSalt}
+          password={password}
+          saltRounds={saltRounds}
+          setHashedPassword={setHashedPassword}
+          setPassword={setPassword}
+        />
       </ContainerWrapper>
       <ContainerWrapper>
         <></>
