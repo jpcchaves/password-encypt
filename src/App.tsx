@@ -1,25 +1,17 @@
-import { AddIcon, MinusIcon } from "@chakra-ui/icons";
-import {
-  Box,
-  Button,
-  Container,
-  Flex,
-  Heading,
-  IconButton,
-  Input,
-  SimpleGrid,
-  Text,
-} from "@chakra-ui/react";
+import { Button, SimpleGrid, useColorMode } from "@chakra-ui/react";
 
-import bcrypt, { hash } from "bcryptjs";
+import bcrypt from "bcryptjs";
 import { useState } from "react";
 import { ContainerWrapper } from "./components/containerWrapper";
 import { HashPassword } from "./components/hashPassword";
+import ThemeToggle from "./components/themeToggle";
 
 const App = () => {
   const [password, setPassword] = useState("");
   const [hashedPassword, setHashedPassword] = useState("");
   const [saltRounds, setSaltRounds] = useState<number>(8);
+
+  const { toggleColorMode } = useColorMode();
 
   const hashPassword = () => {
     if (password.length) {
@@ -54,24 +46,28 @@ const App = () => {
   };
 
   return (
-    <SimpleGrid columns={{ base: 1, sm: 1, md: 2 }}>
-      <ContainerWrapper>
-        <HashPassword
-          clearPasswordInput={clearPasswordInput}
-          decrementSalt={decrementSalt}
-          hashPassword={hashPassword}
-          hashedPassword={hashedPassword}
-          incrementSalt={incrementSalt}
-          password={password}
-          saltRounds={saltRounds}
-          setHashedPassword={setHashedPassword}
-          setPassword={setPassword}
-        />
-      </ContainerWrapper>
-      <ContainerWrapper>
-        <></>
-      </ContainerWrapper>
-    </SimpleGrid>
+    <>
+      <SimpleGrid columns={{ base: 1, sm: 1, md: 2 }}>
+        <ContainerWrapper>
+          <HashPassword
+            clearPasswordInput={clearPasswordInput}
+            decrementSalt={decrementSalt}
+            hashPassword={hashPassword}
+            hashedPassword={hashedPassword}
+            incrementSalt={incrementSalt}
+            password={password}
+            saltRounds={saltRounds}
+            setHashedPassword={setHashedPassword}
+            setPassword={setPassword}
+          />
+        </ContainerWrapper>
+        <ContainerWrapper>
+          <></>
+        </ContainerWrapper>
+      </SimpleGrid>
+
+      <ThemeToggle />
+    </>
   );
 };
 
