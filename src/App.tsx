@@ -34,20 +34,23 @@ const App = () => {
     setPassword(""), setSaltRounds(8);
   };
 
-  const incrementSalt = () => {
-    if (saltRounds >= 20) {
-      return;
-    }
+  const isSaltInLimit = (saltRounds: number): boolean => {
+    const MAX_LIMIT = 20;
+    const MIN_LIMIT = 1;
 
-    setSaltRounds((prev) => prev + 1);
+    return saltRounds >= MIN_LIMIT && saltRounds <= MAX_LIMIT;
+  };
+
+  const incrementSalt = () => {
+    if (isSaltInLimit(saltRounds + 1)) {
+      setSaltRounds((prev) => prev + 1);
+    }
   };
 
   const decrementSalt = () => {
-    if (saltRounds <= 1) {
-      return;
+    if (isSaltInLimit(saltRounds - 1)) {
+      setSaltRounds((prev) => prev - 1);
     }
-
-    setSaltRounds((prev) => prev - 1);
   };
 
   return (
