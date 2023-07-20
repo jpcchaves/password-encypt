@@ -17,12 +17,14 @@ interface IProps {}
 export const HashPassword = ({}: IProps) => {
   const [password, setPassword] = useState("");
   const [hashedPassword, setHashedPassword] = useState("");
+  const [resultMessage, setResultMessage] = useState("");
   const [loading, setLoading] = useState(false);
   const [saltRounds, setSaltRounds] = useState<number>(8);
 
   const hashPassword = async () => {
     if (password.length) {
       setLoading(true);
+      setResultMessage("Hashing....");
       const salt = await bcrypt.genSalt(saltRounds);
       const hash = await bcrypt.hash(password, salt);
       setHashedPassword(hash);
@@ -32,7 +34,9 @@ export const HashPassword = ({}: IProps) => {
 
   const clearPasswordInput = () => {
     setHashedPassword("");
-    setPassword(""), setSaltRounds(8);
+    setPassword("");
+    setSaltRounds(8);
+    setResultMessage("");
   };
 
   const isSaltInLimit = (saltRounds: number): boolean => {
@@ -62,12 +66,14 @@ export const HashPassword = ({}: IProps) => {
           Encrypt some text. The result shown will be a Bcrypt encrypted hash.
         </Text>
       </Box>
-      <Box>
-        <Heading size="md">Result:</Heading>
-        <Container my="2" p={"6"} border={"1px"} borderRadius="base">
-          <Text>{loading ? "Hashing..." : hashedPassword}</Text>
-        </Container>
-      </Box>
+      {resultMessage && (
+        <Box>
+          <Heading size="md">Result:</Heading>
+          <Container my="2" p={"6"} border={"1px"} borderRadius="base">
+            <Text>{loading ? "Hashing..." : hashedPassword}</Text>
+          </Container>
+        </Box>
+      )}
       <Input
         name="password"
         placeholder="Enter the password you want to hash"
