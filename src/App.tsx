@@ -17,6 +17,12 @@ const App = () => {
         </ContainerWrapper>
       </SimpleGrid>
 
+      <SimpleGrid columns={{ base: 1, sm: 1, md: 2 }}>
+        <ContainerWrapper>
+          <>Base 64 generator</>
+        </ContainerWrapper>
+      </SimpleGrid>
+
       <ThemeToggle />
     </>
   );
