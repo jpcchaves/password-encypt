@@ -108,7 +108,11 @@ export const HashPassword = ({}: IProps) => {
                 colorScheme="ghost"
                 size="sm"
                 aria-label="button to copy text to clipboard"
-                disabled={copied}
+                isDisabled={copied}
+                _disabled={{
+                  cursor: "pointer",
+                  opacity: "1",
+                }}
                 icon={
                   copied ? (
                     <CheckIcon color="green.300" />
