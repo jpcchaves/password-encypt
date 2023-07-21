@@ -1,4 +1,4 @@
-import { AddIcon, MinusIcon } from "@chakra-ui/icons";
+import { AddIcon, CopyIcon, MinusIcon, CheckIcon } from "@chakra-ui/icons";
 import {
   Box,
   Button,
@@ -8,9 +8,11 @@ import {
   IconButton,
   Input,
   Text,
+  Tooltip,
 } from "@chakra-ui/react";
 import bcrypt from "bcryptjs";
 import { useState } from "react";
+import { useToast } from "@chakra-ui/react";
 
 interface IProps {}
 
@@ -20,6 +22,9 @@ export const HashPassword = ({}: IProps) => {
   const [resultMessage, setResultMessage] = useState("");
   const [loading, setLoading] = useState(false);
   const [saltRounds, setSaltRounds] = useState<number>(8);
+  const [copied, setCopied] = useState(false);
+
+  const toast = useToast();
 
   const hashPassword = async () => {
     if (password.length) {
@@ -58,6 +63,23 @@ export const HashPassword = ({}: IProps) => {
     }
   };
 
+  const handleCopy = (text: string) => {
+    navigator.clipboard.writeText(text).then(() => {
+      setCopied(true);
+      toast({
+        title: "Copiado!",
+        status: "success",
+        duration: 3000,
+        position: "top-right",
+        size: "2xl",
+      });
+
+      setTimeout(() => {
+        setCopied(false);
+      }, 3000);
+    });
+  };
+
   return (
     <Flex flexDir={"column"}>
       <Box mb="4">
@@ -69,8 +91,34 @@ export const HashPassword = ({}: IProps) => {
       {resultMessage && (
         <Box>
           <Heading size="md">Result:</Heading>
-          <Container my="2" p={"6"} border={"1px"} borderRadius="base">
-            <Text>{loading ? "Hashing..." : hashedPassword}</Text>
+          <Container
+            my="2"
+            p={"6"}
+            border={"1px"}
+            borderRadius="base"
+            position="relative"
+          >
+            <Text id={hashedPassword ? "result" : ""}>
+              {loading ? "Hashing..." : hashedPassword}
+
+              <IconButton
+                position="absolute"
+                top="0"
+                right="0"
+                colorScheme="ghost"
+                size="sm"
+                aria-label="button to copy text to clipboard"
+                disabled={copied}
+                icon={
+                  copied ? (
+                    <CheckIcon color="green.300" />
+                  ) : (
+                    <CopyIcon color="blue.300" />
+                  )
+                }
+                onClick={() => handleCopy(hashedPassword)}
+              />
+            </Text>
           </Container>
         </Box>
       )}
