@@ -4,6 +4,7 @@ import { ContainerWrapper } from "./components/containerWrapper";
 import ThemeToggle from "./components/themeToggle";
 import { HashPassword } from "./modules/pages/hashAndUnhash/hashPassword";
 import { DecryptPassword } from "./modules/pages/hashAndUnhash/unhashPassword";
+import { Base64Generator } from "./components/base64Generator";
 
 const App = () => {
   return (
@@ -17,9 +18,9 @@ const App = () => {
         </ContainerWrapper>
       </SimpleGrid>
 
-      <SimpleGrid columns={{ base: 1, sm: 1, md: 2 }}>
+      <SimpleGrid columns={{ base: 1, sm: 1, md: 1 }}>
         <ContainerWrapper>
-          <>Base 64 generator</>
+          <Base64Generator />
         </ContainerWrapper>
       </SimpleGrid>
 
