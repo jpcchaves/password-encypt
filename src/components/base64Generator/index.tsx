@@ -45,7 +45,8 @@ export const Base64Generator = () => {
 
       reader.onload = () => {
         const base64String = reader.result as string;
-        resolve(base64String);
+        const base64WithoutPrefix = removeBase64Prefix(base64String);
+        resolve(base64WithoutPrefix);
         setIsLoading(false);
       };
 
@@ -57,6 +58,10 @@ export const Base64Generator = () => {
       reader.readAsDataURL(file);
     });
   };
+
+  const removeBase64Prefix = (rawBase64: string): string => {
+    return rawBase64.replace(/^data:image\/[a-z]+;base64,/, '');
+  }
 
   const handleCopy = (text: string) => {
     navigator.clipboard.writeText(text).then(() => {
