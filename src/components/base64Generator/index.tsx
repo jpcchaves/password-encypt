@@ -4,6 +4,7 @@ import {
   Button,
   Container,
   Flex,
+  Heading,
   IconButton,
   Image,
   Text,
@@ -60,8 +61,8 @@ export const Base64Generator = () => {
   };
 
   const removeBase64Prefix = (rawBase64: string): string => {
-    return rawBase64.replace(/^data:image\/[a-z]+;base64,/, '');
-  }
+    return rawBase64.replace(/^data:image\/[a-z]+;base64,/, "");
+  };
 
   const handleCopy = (text: string) => {
     navigator.clipboard.writeText(text).then(() => {
@@ -82,6 +83,13 @@ export const Base64Generator = () => {
 
   return (
     <Flex flexDir={"column"}>
+      <Box mb="4">
+        <Heading>Base 64 Generator</Heading>
+        <Text>
+          Here you can generate a Base64 from a image file (jpeg, jpg, png,
+          etc...)
+        </Text>
+      </Box>
       {!isLoading && imgBase64 && (
         <Box overflow="hidden" height="200px" position="relative">
           <Text textOverflow={"ellipsis"}>{imgBase64}</Text>
