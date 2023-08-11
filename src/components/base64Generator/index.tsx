@@ -19,7 +19,7 @@ import {
 import { CheckIcon, CopyIcon } from "@chakra-ui/icons";
 
 export const Base64Generator = () => {
-  const [selectedFile, setSelectedFile] = useState<File>({} as File);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [imgBase64, setImgBase64] = useState<string>("");
   const [copied, setCopied] = useState(false);
@@ -48,7 +48,7 @@ export const Base64Generator = () => {
   };
 
   const handleConvertBase64 = () => {
-    convertToBase64(selectedFile)
+    convertToBase64(selectedFile!)
       .then((base64String) => {
         setImgBase64(base64String);
       })
@@ -57,7 +57,7 @@ export const Base64Generator = () => {
       });
   };
 
-  const convertToBase64 = (file: File): Promise<string> => {
+  const convertToBase64 = (file: Blob): Promise<string> => {
     return new Promise((resolve, reject) => {
       setIsLoading(true);
       const reader = new FileReader();
@@ -81,6 +81,16 @@ export const Base64Generator = () => {
         setIsLoading(false);
       };
 
+      if (!file) {
+        toast({
+          title: "Selecione um arquivo para continuar",
+          status: "error",
+          duration: 3000,
+          position: "top-right",
+          size: "2xl",
+        });
+        return;
+      }
       reader.readAsDataURL(file);
     });
   };
@@ -115,33 +125,35 @@ export const Base64Generator = () => {
           etc...)
         </Text>
       </Box>
-      {imgBase64 && (
+      {imgBase64 ? (
         <Box overflow="hidden" height="200px" position="relative">
-          {isLoading ? (
-            <AbsoluteCenter>
-              <Spinner />
-            </AbsoluteCenter>
-          ) : (
-            <Text textOverflow={"ellipsis"}>{imgBase64}</Text>
-          )}
+          <>
+            {isLoading ? (
+              <AbsoluteCenter>
+                <Spinner />
+              </AbsoluteCenter>
+            ) : (
+              <Text textOverflow={"ellipsis"}>{imgBase64}</Text>
+            )}
 
-          <IconButton
-            position="absolute"
-            top="2"
-            right="2"
-            colorScheme="blue"
-            size="md"
-            aria-label="button to copy text to clipboard"
-            isDisabled={copied}
-            _disabled={{
-              cursor: "pointer",
-              opacity: "1",
-            }}
-            icon={copied ? <CheckIcon /> : <CopyIcon />}
-            onClick={() => handleCopy(imgBase64)}
-          />
+            <IconButton
+              position="absolute"
+              top="2"
+              right="2"
+              colorScheme="blue"
+              size="md"
+              aria-label="button to copy text to clipboard"
+              isDisabled={copied}
+              _disabled={{
+                cursor: "pointer",
+                opacity: "1",
+              }}
+              icon={copied ? <CheckIcon /> : <CopyIcon />}
+              onClick={() => handleCopy(imgBase64)}
+            />
+          </>
         </Box>
-      )}
+      ) : null}
       <InputGroup my={"2"}>
         <Checkbox
           name={"hasPrefix"}
@@ -168,6 +180,8 @@ export const Base64Generator = () => {
       <Button
         onClick={() => {
           setImgBase64("");
+          setIsLoading(false);
+          setSelectedFile(null);
           //@ts-ignore
           document.getElementById("fileInput").value = "";
         }}
