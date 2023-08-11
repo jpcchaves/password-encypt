@@ -2,20 +2,25 @@ import { useState } from "react";
 import {
   Box,
   Button,
+  Checkbox,
   Container,
   Flex,
+  FormLabel,
   Heading,
   IconButton,
   Image,
+  InputGroup,
   Text,
   useToast,
 } from "@chakra-ui/react";
 import { CheckIcon, CopyIcon } from "@chakra-ui/icons";
 
 export const Base64Generator = () => {
+  const [selectedFile, setSelectedFile] = useState<File>({} as File);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [imgBase64, setImgBase64] = useState<string>("");
   const [copied, setCopied] = useState(false);
+  const [hasPrefix, setHasPrefix] = useState(true);
 
   const toast = useToast();
 
@@ -26,17 +31,27 @@ export const Base64Generator = () => {
       const allowedFormats = ["image/jpeg", "image/jpg", "image/png"];
 
       if (allowedFormats.includes(file.type)) {
-        convertToBase64(file)
-          .then((base64String) => {
-            setImgBase64(base64String);
-          })
-          .catch((error) => {
-            console.error(error);
-          });
+        setSelectedFile(file);
       } else {
-        throw new Error("Antonio");
+        toast({
+          title: "Ocorreu um erro ao gerar o base64. Tente novamente",
+          status: "error",
+          duration: 3000,
+          position: "top-right",
+          size: "2xl",
+        });
       }
     }
+  };
+
+  const handleConvertBase64 = () => {
+    convertToBase64(selectedFile)
+      .then((base64String) => {
+        setImgBase64(base64String);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   };
 
   const convertToBase64 = (file: File): Promise<string> => {
@@ -45,9 +60,16 @@ export const Base64Generator = () => {
       const reader = new FileReader();
 
       reader.onload = () => {
-        const base64String = reader.result as string;
-        const base64WithoutPrefix = removeBase64Prefix(base64String);
-        resolve(base64WithoutPrefix);
+        let rawBase64 = reader.result as string;
+        let base64String;
+
+        if (hasPrefix) {
+          base64String = rawBase64;
+        } else {
+          base64String = removeBase64Prefix(rawBase64);
+        }
+
+        resolve(base64String);
         setIsLoading(false);
       };
 
@@ -83,7 +105,7 @@ export const Base64Generator = () => {
 
   return (
     <Flex flexDir={"column"}>
-      <Box mb="4">
+      <Box>
         <Heading>Base 64 Generator</Heading>
         <Text>
           Here you can generate a Base64 from a image file (jpeg, jpg, png,
@@ -111,12 +133,29 @@ export const Base64Generator = () => {
           />
         </Box>
       )}
+      <InputGroup my={"2"}>
+        <Checkbox
+          name={"hasPrefix"}
+          defaultChecked={hasPrefix}
+          onChange={() => setHasPrefix((prev) => !prev)}
+        >
+          With Prefix
+        </Checkbox>
+      </InputGroup>
       <input
         type="file"
         accept="image/jpg, image/jpeg, image/jpg"
         onChange={handleFileSelect}
         id="fileInput"
       />
+      <Button
+        type="button"
+        colorScheme="blue"
+        onClick={() => handleConvertBase64()}
+        my={"2"}
+      >
+        Generate Base64
+      </Button>
       <Button
         onClick={() => {
           setImgBase64("");
