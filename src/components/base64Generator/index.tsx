@@ -1,7 +1,9 @@
 import { useState } from "react";
 import {
+  AbsoluteCenter,
   Box,
   Button,
+  Center,
   Checkbox,
   Container,
   Flex,
@@ -10,6 +12,7 @@ import {
   IconButton,
   Image,
   InputGroup,
+  Spinner,
   Text,
   useToast,
 } from "@chakra-ui/react";
@@ -112,9 +115,15 @@ export const Base64Generator = () => {
           etc...)
         </Text>
       </Box>
-      {!isLoading && imgBase64 && (
+      {imgBase64 && (
         <Box overflow="hidden" height="200px" position="relative">
-          <Text textOverflow={"ellipsis"}>{imgBase64}</Text>
+          {isLoading ? (
+            <AbsoluteCenter>
+              <Spinner />
+            </AbsoluteCenter>
+          ) : (
+            <Text textOverflow={"ellipsis"}>{imgBase64}</Text>
+          )}
 
           <IconButton
             position="absolute"
