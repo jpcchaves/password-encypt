@@ -24,6 +24,7 @@ export const Base64Generator = () => {
   const [imgBase64, setImgBase64] = useState<string>("");
   const [copied, setCopied] = useState(false);
   const [hasPrefix, setHasPrefix] = useState(true);
+  const [showPreview, setShowPreview] = useState(false);
 
   const toast = useToast();
 
@@ -163,6 +164,21 @@ export const Base64Generator = () => {
           With Prefix
         </Checkbox>
       </InputGroup>
+      {showPreview && imgBase64 ? (
+        <Center>
+          <Image src={imgBase64} width={"200px"} />
+        </Center>
+      ) : null}
+      <InputGroup my={"2"}>
+        <Checkbox
+          disabled={!showPreview && !imgBase64}
+          name={"showPreview"}
+          defaultChecked={showPreview}
+          onChange={() => setShowPreview((prev) => !prev)}
+        >
+          Show Preview
+        </Checkbox>
+      </InputGroup>
       <input
         type="file"
         accept="image/jpg, image/jpeg, image/jpg"
@@ -180,6 +196,7 @@ export const Base64Generator = () => {
       <Button
         onClick={() => {
           setImgBase64("");
+          setShowPreview(false);
           setIsLoading(false);
           setSelectedFile(null);
           //@ts-ignore

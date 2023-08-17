@@ -23,7 +23,6 @@ const App = () => {
           <Base64Generator />
         </ContainerWrapper>
       </SimpleGrid>
-
       <ThemeToggle />
     </>
   );
