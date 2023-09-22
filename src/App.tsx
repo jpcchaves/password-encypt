@@ -5,10 +5,12 @@ import ThemeToggle from "./components/themeToggle";
 import { HashPassword } from "./modules/pages/hashAndUnhash/hashPassword";
 import { DecryptPassword } from "./modules/pages/hashAndUnhash/unhashPassword";
 import { Base64Generator } from "./modules/pages/base64/base64Generator";
+import GlobalHeader from "./components/globalHeader";
 
 const App = () => {
   return (
     <>
+      <GlobalHeader />
       <SimpleGrid columns={{ base: 1, sm: 1, md: 2 }}>
         <ContainerWrapper>
           <HashPassword />
