@@ -4,7 +4,7 @@ import { ContainerWrapper } from "./components/containerWrapper";
 import ThemeToggle from "./components/themeToggle";
 import { HashPassword } from "./modules/pages/hashAndUnhash/hashPassword";
 import { DecryptPassword } from "./modules/pages/hashAndUnhash/unhashPassword";
-import { Base64Generator } from "./components/base64Generator";
+import { Base64Generator } from "./modules/pages/base64/base64Generator";
 
 const App = () => {
   return (
