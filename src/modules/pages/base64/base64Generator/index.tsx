@@ -22,6 +22,7 @@ export const Base64Generator = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [imgBase64, setImgBase64] = useState<string>("");
+  const [imgBase64WithoutPrefix, setImgBase64WithoutPrefix] = useState("");
   const [copied, setCopied] = useState(false);
   const [hasPrefix, setHasPrefix] = useState(true);
   const [showPreview, setShowPreview] = useState(false);
@@ -51,7 +52,8 @@ export const Base64Generator = () => {
   const handleConvertBase64 = () => {
     convertToBase64(selectedFile!)
       .then((base64String) => {
-        setImgBase64(base64String);
+        setImgBase64(() => base64String);
+        setImgBase64WithoutPrefix(() => removeBase64Prefix(base64String));
       })
       .catch((error) => {
         console.error(error);
@@ -64,14 +66,7 @@ export const Base64Generator = () => {
       const reader = new FileReader();
 
       reader.onload = () => {
-        let rawBase64 = reader.result as string;
-        let base64String;
-
-        if (hasPrefix) {
-          base64String = rawBase64;
-        } else {
-          base64String = removeBase64Prefix(rawBase64);
-        }
+        let base64String = reader.result as string;
 
         resolve(base64String);
         setIsLoading(false);
@@ -134,7 +129,9 @@ export const Base64Generator = () => {
                 <Spinner />
               </AbsoluteCenter>
             ) : (
-              <Text textOverflow={"ellipsis"}>{imgBase64}</Text>
+              <Text textOverflow={"ellipsis"}>
+                {hasPrefix ? imgBase64 : imgBase64WithoutPrefix}
+              </Text>
             )}
 
             <IconButton
@@ -158,7 +155,7 @@ export const Base64Generator = () => {
       <InputGroup my={"2"}>
         <Checkbox
           name={"hasPrefix"}
-          defaultChecked={hasPrefix}
+          isChecked={hasPrefix}
           onChange={() => setHasPrefix((prev) => !prev)}
         >
           With Prefix
@@ -173,7 +170,7 @@ export const Base64Generator = () => {
         <Checkbox
           disabled={!showPreview && !imgBase64}
           name={"showPreview"}
-          defaultChecked={showPreview}
+          isChecked={showPreview}
           onChange={() => setShowPreview((prev) => !prev)}
         >
           Show Preview
@@ -196,7 +193,8 @@ export const Base64Generator = () => {
       <Button
         onClick={() => {
           setImgBase64("");
-          setShowPreview(false);
+          setImgBase64WithoutPrefix("");
+          setShowPreview(() => false);
           setIsLoading(false);
           setSelectedFile(null);
           //@ts-ignore
